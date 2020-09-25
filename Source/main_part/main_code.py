@@ -184,14 +184,17 @@ def round_handle_user_input(list_data,element):
     for i,x in enumerate (list_data):
         print(i,x)
     input_number = input(f'Select the number corresponding to the {element} you want from the list \n')
-    index = int(input_number)
+    return input_number
+    
+def get_name_of_person(name,list_data):
+    index = int(name)
     element_value =list_data[index]
     return element_value
 
 def round_class_dictionary():
-    owner_name =round_handle_user_input(print_people(),'round owner')
-    order_person = round_handle_user_input(print_people(),'owners orderees name')
-    name_of_drink =round_handle_user_input(print_drinks(),'drink')
+    owner_name =get_name_of_person(round_handle_user_input(print_people(),'round owner'),print_people())
+    order_person = get_name_of_person(round_handle_user_input(print_people(),'owners orderees name'),print_people())
+    name_of_drink =get_name_of_person(round_handle_user_input(print_drinks(),'drink'),print_drinks())
     owner_age=[person.age for person in people if person.name == owner_name]
     order_person_age =[person.age for person in people if person.name ==order_person]
     drink_type =[element.type for element in drinks if element.drink == name_of_drink]

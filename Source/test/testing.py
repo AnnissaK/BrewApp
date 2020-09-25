@@ -1,23 +1,22 @@
 import unittest
 from unittest import mock
 from unittest.mock import patch
-from Source.main_part.main_code import round_handle_user_input,load_into_round_class#try ..\path to data
+from Source.main_part.main_code import round_handle_user_input
 from Source.Core.round_class import Round
 from Source.printing_functions.printing_outputs import print_table
 #test method in class
 #try except block
 class Test_methods(unittest.TestCase):
-    @patch('Source.Core.main_part.main_code.round_handle_user_input')
+    @patch('Source.main_part.main_code.round_handle_user_input')
     def test_round_input(self,mock_test_round_handle):
         #Arrange
         list_data = ['a','j','k']
         element ='name'
-        mock_test_return_value = 1
+        mock_test_return_value = str(1)
         #Act
         actual = round_handle_user_input(list_data,element)
         #no certain actual value
         self.assertEqual(actual,mock_test_return_value)
-    @patch('Source.ro')
     
 #     @patch.object(Source.Core.round_class,'return_items')
 #     @patch.object(Source.Core.round_class.Round,'add_order')
