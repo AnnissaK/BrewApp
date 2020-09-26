@@ -7,11 +7,12 @@ from copy_working_classes import print_people,load_into_list
 class Test_methods(unittest.TestCase):
     @patch('copy_working_classes.round_handle_user_input')
     @patch('copy_working_class.load_into_list')
-    def test_round_handle_user_input(self,input_load_list,mock_test_order_request_returned)
+    def test_round_handle_user_input(self,input_load_list,mock_test_order_request)
         #Arrange
-        mock_.return_value = 1
+        round = Mock(Roun)
+        mock_test_order_request.return= 1
         #Act
-        actual =round_handle_user_input(print_people(),'name')
+        
         #Assert
         self.assertEqual(actual,1)
 
