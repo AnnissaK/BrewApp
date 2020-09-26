@@ -103,9 +103,10 @@ def print_previous_orders():
     items =[]
     for d in orders_dict:
         for key in d:
+            cost_list =[obj.cost for obj in drinks if obj.drink==d[key]]
             items.append((f'{key}\'s ordered {d[key]}'))
-    for i,x in zip(owners_list,items):
-        print(f'{i.upper()}\'s ROUND : {x}')
+    for i,x,s in zip(owners_list,items,cost_list):
+        print(f'{i.upper()}\'s ROUND : {x} and the cost of the drink cost £{s}')
             
 #order_names = [person.owner for person in order_request]
 #order_menu = [request.orders for request in order_request]
@@ -119,8 +120,8 @@ def save_round(ordername,name,drink):
         
 #at start
 def load_drinks():
-    for i,s in zip(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type')):
-        drinks.append(Drink(i,s))
+    for i,s,x in zip(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost')):
+        drinks.append(Drink(i,s,x))
 
 #at start
 def load_people():
@@ -191,29 +192,25 @@ def get_name_of_person(name,list_data):
     element_value =list_data[index]
     return element_value
 
-def handle_round_input():
+def round_class_dictionary():
     owner_name =get_name_of_person(round_handle_user_input(print_people(),'round owner'),print_people())
     order_person = get_name_of_person(round_handle_user_input(print_people(),'owners orderees name'),print_people())
     name_of_drink =get_name_of_person(round_handle_user_input(print_drinks(),'drink'),print_drinks())
-    return owner_name,order_person,name_of_drink
-    
-def get_round_class():
-    handle_round_input()[0]=[person.age for person in people if person.name ==handle_round_input()[0]]
-    hande_round_input()[1] =[person.age for person in people if person.name == handle_round_input()[1]]
-    handle_round_input()[2] =[element.type for element in drinks if element.drink == handle_round_input()[2]]
-    
-    # dict_order_owner = dict(zip(drink_type,owner_age))
-    # dict_order = dict(zip(drink_type,order_person_age))
-    # for (k1,v1),(k2,v2) in zip(dict_order_owner.items(),dict_order.items()):
-    #         if k1== 'Alcoholic':
-    #             if int(v1) <=18:
-    #                 print('it is ilegal for you as the owner to buy the round because you are underage')
-    #         if k2 =='Alcoholic':
-    #             if int(v2) <=18:
-    #                 print('it is ilegal to buy to an alcoholic drink even if the person buying your round is over 18')
-    #         else:
-    #             print('there is no age restrictions for your drink')
-    #             save_round(owner_name,order_person,name_of_drink)
+    owner_age=[person.age for person in people if person.name == owner_name]
+    order_person_age =[person.age for person in people if person.name ==order_person]
+    drink_type =[element.type for element in drinks if element.drink == name_of_drink]
+    dict_order_owner = dict(zip(drink_type,owner_age))
+    dict_order = dict(zip(drink_type,order_person_age))
+    for (k1,v1),(k2,v2) in zip(dict_order_owner.items(),dict_order.items()):
+            if k1== 'Alcoholic':
+                if int(v1) <=18:
+                    print('it is ilegal for you as the owner to buy the round because you are underage')
+            if k2 =='Alcoholic':
+                if int(v2) <=18:
+                    print('it is ilegal to buy to an alcoholic drink even if the person buying your round is over 18')
+            else:
+                print('there is no age restrictions for your drink')
+                save_round(owner_name,order_person,name_of_drink)
 
 def favourites_prompts():
     print(print_people())
@@ -258,8 +255,7 @@ def output(answer):
             print_previous_orders()
             return_to_input()
         elif answer ==7:
-            handle_round_input()
-          
+            round_class_dictionary()
             return_to_input()
         elif answer ==8:
             favourites_menu()
