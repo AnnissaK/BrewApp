@@ -196,7 +196,6 @@ def handle_round_input():
     order_person = get_name_of_person(round_handle_user_input(print_people(),'owners orderees name'),print_people())
     name_of_drink =get_name_of_person(round_handle_user_input(print_drinks(),'drink'),print_drinks())
     return owner_name,order_person,name_of_drink
-    print(handle_round_input())
     
 def get_round_class():
     handle_round_input()[0]=[person.age for person in people if person.name ==handle_round_input()[0]]
