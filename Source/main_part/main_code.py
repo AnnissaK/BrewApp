@@ -101,12 +101,13 @@ def print_previous_orders():
     orders_dict=[obj.orders for obj in load_into_round_class(load_into_list(round_file,'owner'),load_into_list(round_file,'name'),load_into_list(round_file,'drink'))]
     owners_list = [obj.owner for obj in load_into_round_class(load_into_list(round_file,'owner'),load_into_list(round_file,'name'),load_into_list(round_file,'drink'))]
     items =[]
+    cost_list=[]
     for d in orders_dict:
         for key in d:
-            cost_list =[obj.cost for obj in drinks if obj.drink==d[key]]
+            cost_list.append(obj.cost for obj in drinks if obj.drink==d[key])
             items.append((f'{key}\'s ordered {d[key]}'))
     for i,x,s in zip(owners_list,items,cost_list):
-        print(f'{i.upper()}\'s ROUND : {x} and the cost of the drink cost £{s}')
+        print(f'{i.upper()}\'s ROUND : {x} and the cost of the drink was £{s}')
             
 #order_names = [person.owner for person in order_request]
 #order_menu = [request.orders for request in order_request]
@@ -146,6 +147,9 @@ def get_type_of_drink():
     type_of_drink = [typedrink.type for typedrink in drinks]
     return type_of_drink
 
+def get_cost_of_drinks():
+    cost_of_drinks =[costdrink.cost for costdrink in drinks]
+    return cost_of_drinks
 
 # def save_items(path,data):
 #     with open(path,'a+')as f:
