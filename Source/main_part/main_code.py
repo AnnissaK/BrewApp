@@ -202,13 +202,48 @@ def round_handle_drinks():
     for i, (x,s) in enumerate(zip(print_drinks(),get_cost_of_drinks())):
         t.add_row([i,x,s])
     print(t)
-    input_number = input('Select the number corresponding to the drink you want from the list \n')
+    input_number = input('Select the number corresponding to the drink you want from the list,if your name is not on the list select a number outside the range given \n')
     return input_number
 
+
 def get_name_of_person(name,list_data):
-    index = int(name)
-    element_value =list_data[index]
-    return element_value
+    try:
+        index = int(name)
+        element_value =list_data[index]
+        return element_value
+    except IndexError:
+        get_preferred_drinks()
+        preference_round()
+    
+
+def get_preferred_drinks():
+    print(print_people())
+    input_owner = input('choose a name referring to the owner buying the round')
+    input_name = input('Please enter the name of person you are buying for')
+    if input_name not in (print_people()):
+        print('your name is not on the system please add your name by returning to the main menu')
+    else:
+        favourite=[obj.fave_dict for obj in add_faves_class()]
+        for d in favourite:
+            for key in d:
+                if key == input_name:
+                    age_of_person_name =[person.age for person in people if person.name == input_name]
+                    age_of_owner =[person.age for person in people if person.name == input_owner]
+                    return d[key],age_of_person_name,age_of_owner,input_owner,input_name
+
+def preference_round():
+    input_type = input('is your favourite drink Alcoholic, enter y for yes and n for no?')
+    if input_type=='y':
+        #d1 =Drink(get_preferred_drinks()[0],'Alcoholic')
+        if get_preferred_drinks()[1] and get_preferred_drinks()[2]<=18:
+            print('you are not old enough to order your favourite drink')
+        else: 
+            print(f'you can buy your favourite drink ')
+            save_round(get_preferred_drinks()[3],get_preferred_drinks()[4],get_preferred_drinks()[0])
+    elif input_type =='n':
+        print('There are no age restrictions on soft drinks ')
+        save_round(get_preferred_drinks()[3],get_preferred_drinks()[4],get_preferred_drinks()[0])
+
 
 def round_class_dictionary():
     owner_name =get_name_of_person(round_handle_user_input(print_people(),'round owner'),print_people())
@@ -222,10 +257,10 @@ def round_class_dictionary():
     for (k1,v1),(k2,v2) in zip(dict_order_owner.items(),dict_order.items()):
             if k1== 'Alcoholic':
                 if int(v1) <=18:
-                    print('it is ilegal for you as the owner to buy the round because you are underage')
+                    print('it is illegal for you as the owner to buy the round because you are underage')
             if k2 =='Alcoholic':
                 if int(v2) <=18:
-                    print('it is ilegal to buy to an alcoholic drink even if the person buying your round is over 18')
+                    print('it is illegal to buy to an alcoholic drink even if the person buying your round is over 18')
             else:
                 print('there is no age restrictions for your drink')
                 save_round(owner_name,order_person,name_of_drink)
@@ -241,7 +276,7 @@ def favourites_prompts():
         print('add name to list by selecting option 4')
     try:
         print(print_drinks())
-        input_drinks = input(str('pick favourite drink from the list of drinks\n'))
+        input_drinks = input(str('Please write your favourite drink\n'))
     except ValueError:
         print('enter a string')
     if input_drinks not in print_drinks():
