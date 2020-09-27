@@ -1,5 +1,6 @@
 #have to go back to file and put curser on next line or throws error
 import sys
+from prettytable import PrettyTable
 from Source.Core.drink_and_people_class import Person,Drink
 from Source.Core.favourites_class import Favourites
 from Source.Core.round_class import Round
@@ -186,11 +187,24 @@ def add_drinks():
 
 
 def round_handle_user_input(list_data,element):
+    t= PrettyTable()
+    t.field_names =['Index number','Name']
     for i,x in enumerate (list_data):
-        print(i,x)
+        #t =PrettyTable(['Index number','Name'])
+        t.add_row([i,x])
+    print(t)
     input_number = input(f'Select the number corresponding to the {element} you want from the list \n')
     return input_number
-    
+
+def round_handle_drinks():
+    t = PrettyTable()
+    t.field_names =['Index number','Drink','Cost in £']
+    for i, (x,s) in enumerate(zip(print_drinks(),get_cost_of_drinks())):
+        t.add_row([i,x,s])
+    print(t)
+    input_number = input('Select the number corresponding to the drink you want from the list \n')
+    return input_number
+
 def get_name_of_person(name,list_data):
     index = int(name)
     element_value =list_data[index]
@@ -199,7 +213,7 @@ def get_name_of_person(name,list_data):
 def round_class_dictionary():
     owner_name =get_name_of_person(round_handle_user_input(print_people(),'round owner'),print_people())
     order_person = get_name_of_person(round_handle_user_input(print_people(),'owners orderees name'),print_people())
-    name_of_drink =get_name_of_person(round_handle_user_input(print_drinks(),'drink'),print_drinks())
+    name_of_drink =get_name_of_person(round_handle_drinks(),print_drinks())
     owner_age=[person.age for person in people if person.name == owner_name]
     order_person_age =[person.age for person in people if person.name ==order_person]
     drink_type =[element.type for element in drinks if element.drink == name_of_drink]
