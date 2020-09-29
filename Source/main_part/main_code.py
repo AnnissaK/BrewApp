@@ -32,8 +32,8 @@ drinks=[]
 #fave_menu = {}
 
 def start():
-    load_people()
-    load_drinks()
+    load_people(load_into_list(file_people_list,'name'),load_into_list(file_people_list,'age'))
+    load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
     
 def menu_option():
     print(MENU)
@@ -67,22 +67,21 @@ def load_into_list(filename,header):
             data_list.append(row[header])
         return data_list
 
-def add_faves_class():
+def add_faves_class(x,y):
     favourites1=[]
-    for i,s in zip(load_into_list(fave_dictionary,'name'),load_into_list(fave_dictionary,'favourites')):
+    for i,s in zip(x,y):
         F1 =Favourites(i)
         F1.add_to_favourites(i,s)
         favourites1.append(F1)
     return favourites1
 
 def favourites_menu():
-    favourite=[obj.fave_dict for obj in add_faves_class()]
+    favourite=[obj.fave_dict for obj in add_faves_class(load_into_list(fave_dictionary,'name'),load_into_list(fave_dictionary,'favourites')]
     items =[]
     for d in favourite:
         for key in d:
             items.append((f'{key}\'s favourite drink is {d[key]}'))
     print_table('Favourites',items)
-
 
 
 def save_csv_items(path,name,drink):
@@ -121,14 +120,16 @@ def save_round(ordername,name,drink):
         csv_writer.writerow([ordername,name,drink])
         
 #at start
-def load_drinks():
-    for i,s,x in zip(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost')):
+def load_drinks(l,y,z):
+    for i,s,x in zip(l,y,z):
         drinks.append(Drink(i,s,x))
+    return drinks
 
 #at start
-def load_people():
-    for i,s in zip(load_into_list(file_people_list,'name'),load_into_list(file_people_list,'age')):
+def load_people(x,y):
+    for i,s in zip(x,y):
         people.append(Person(i,s))
+    return people
     
         
 def print_people():
@@ -167,7 +168,9 @@ def add_name():
     age_user = user_input.split()[1]
     if name_user not in print_people():
         save_csv_items(file_people_list,name_user,age_user)
-        load_people()
+        load_people(load_into_list(file_people_list,'name'),load_into_list(file_people_list,'age'))
+    
+    
         #people.append(classes.Person(name_user,age_user))
     else:
         print('name already on the database')                        
@@ -181,7 +184,7 @@ def add_drinks():
     user_type_drink =user_input_drinks.split()[1]
     if user_drink not in drinks:
         save_csv_items(file_drink_list,user_drink,user_type_drink)
-        load_drinks()
+        load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
     else:
         print('drink already on database')
 
@@ -213,7 +216,7 @@ def get_name_of_person(name,list_data):
         return element_value
     except IndexError:
         get_preferred_drinks()
-        preference_round()
+
     
 
 def get_preferred_drinks():
@@ -222,27 +225,33 @@ def get_preferred_drinks():
     input_name = input('Please enter the name of person you are buying for')
     if input_name not in (print_people()):
         print('your name is not on the system please add your name by returning to the main menu')
-    else:
-        favourite=[obj.fave_dict for obj in add_faves_class()]
-        for d in favourite:
-            for key in d:
-                if key == input_name:
-                    age_of_person_name =[person.age for person in people if person.name == input_name]
-                    age_of_owner =[person.age for person in people if person.name == input_owner]
-                    return d[key],age_of_person_name,age_of_owner,input_owner,input_name
+    preference_round(input_owner,input_name)
+        
 
-def preference_round():
-    input_type = input('is your favourite drink Alcoholic, enter y for yes and n for no?')
+def preference_round(input_owner,input_name):
+    favourite=[obj.fave_dict for obj in add_faves_class((load_into_list(fave_dictionary,'name'),load_into_list(fave_dictionary,'favourites'))]
+    for d in favourite:
+        for key in d:
+            if key == input_name:
+                age_of_person_name =[person.age for person in people if person.name == input_name]
+                age_of_owner =[person.age for person in people if person.name == input_owner]
+                drink = d[key]
+    age_restriction_for_preferences(age_of_person_name,age_of_owner,input_name,input_owner,drink)
+    
+def age_restriction_for_preferences(age_of_person_name,age_of_owner,input_name,input_owner,drink):
+    input_type = input('for you as the owner, is your favourite drink Alcoholic, enter y for yes and n for no?')
     if input_type=='y':
-        #d1 =Drink(get_preferred_drinks()[0],'Alcoholic')
-        if get_preferred_drinks()[1] and get_preferred_drinks()[2]<=18:
+        integer_age_person = int("".join(map(str, age_of_person_name)))
+        if integer_age_person<=18:
+            print('you are not old enough to order your favourite drink')
+        if age_of_owner <=18:
             print('you are not old enough to order your favourite drink')
         else: 
             print(f'you can buy your favourite drink ')
-            save_round(get_preferred_drinks()[3],get_preferred_drinks()[4],get_preferred_drinks()[0])
+            save_round(input_owner,input_name,drink)
     elif input_type =='n':
-        print('There are no age restrictions on soft drinks ')
-        save_round(get_preferred_drinks()[3],get_preferred_drinks()[4],get_preferred_drinks()[0])
+        print('There are no age restrictions on soft drinks')
+        save_round(input_owner,input_name,drink)
 
 
 def round_class_dictionary():
