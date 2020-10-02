@@ -5,7 +5,6 @@ from Source.Core.drink_and_people_class import Person,Drink
 from Source.Core.favourites_class import Favourites
 from Source.Core.round_class import Round
 from Source.printing_functions.printing_outputs import print_table
-from Source.data_bases.pulling_data_app import connection_f,get_data_base
 import csv
 from csv import DictReader
 from csv import writer
@@ -29,14 +28,13 @@ file_drink_list = 'drinks.csv'
 fave_dictionary = 'favourites_dictionary.csv'
 round_file = 'round.csv'
 people = []
-#drinks=[]
+drinks=[]
 #fave_menu = {}
 
 def start():
     load_people(load_into_list(file_people_list,'name'),load_into_list(file_people_list,'age'))
-    #load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
-    get_data_base('Drinks',Drink)
-
+    load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
+    
 def menu_option():
     print(MENU)
     answer = (int(input('what is your option?: \n')))
@@ -106,7 +104,7 @@ def print_previous_orders():
     cost_list=[]
     for d in orders_dict:
         for key in d:
-            cost_list.append(obj.cost for obj in get_data_base(Drinks,'Drink') if obj.drink==d[key])
+            cost_list.append(obj.cost for obj in drinks if obj.drink==d[key])
             items.append((f'{key}\'s ordered {d[key]}'))
     for i,x,s in zip(owners_list,items,cost_list):
         print(f'{i.upper()}\'s ROUND : {x} and the cost of the drink was £{s}')
@@ -122,10 +120,10 @@ def save_round(ordername,name,drink):
         csv_writer.writerow([ordername,name,drink])
         
 #at start
-# def load_drinks(l,y,z):
-#     for i,s,x in zip(l,y,z):
-#         drinks.append(Drink(i,s,x))
-#     return drinks
+def load_drinks(l,y,z):
+    for i,s,x in zip(l,y,z):
+        drinks.append(Drink(i,s,x))
+    return drinks
 
 #at start
 def load_people(x,y):
@@ -144,15 +142,15 @@ def get_age_of_person():
 
   
 def print_drinks():
-    drinks_name = [drink_name.drink for drink_name in get_data_base('Drinks',Drink)]
+    drinks_name = [drink_name.drink for drink_name in drinks]
     return drinks_name
 
 def get_type_of_drink():
-    type_of_drink = [typedrink.type for typedrink in get_data_base('Drinks',Drink) ]
+    type_of_drink = [typedrink.type for typedrink in drinks]
     return type_of_drink
 
 def get_cost_of_drinks():
-    cost_of_drinks =[costdrink.cost for costdrink in get_data_base('Drinks',Drink)]
+    cost_of_drinks =[costdrink.cost for costdrink in drinks]
     return cost_of_drinks
 
 # def save_items(path,data):
@@ -184,22 +182,11 @@ def add_drinks():
         print(f'{e}')
     user_drink = user_input_drinks.split()[0]
     user_type_drink =user_input_drinks.split()[1]
-    return user_drink,user_type_of_drink
- #append to data_list   
-
-#on exit
-def update_data_base(table,column1,column2,column3):
-    connect_f
-    cursor = connection_f.cursor()
-    for i in get_data_base(Drinks,'Drinks'):
-        args =(get_data_base(Drinks,'Drinks').drink,get_data_base(Drinks,'Drinks').type,'4.00')
-        cursor.execute(f'''INSERT INTO {table} ({column1},{column2},{column3}) VALUES ("{%s},{%s},{%s}") ON DUPLICATE KEY UPDATE {column1},{column2},{column3}="{%s},{%s},{%s}"''',args+args)
-        
-    #if user_drink not in drinks:
-        #save_csv_items(file_drink_list,user_drink,user_type_drink)
-        #load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
-    # else:
-    #     print('drink already on database')
+    if user_drink not in drinks:
+        save_csv_items(file_drink_list,user_drink,user_type_drink)
+        load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
+    else:
+        print('drink already on database')
 
 
 def round_handle_user_input(list_data,element):
@@ -320,7 +307,6 @@ def output(answer):
             return_to_input()
         elif answer == 3:
             exit()
-            update_data_base()
         elif answer == 4:
             add_name()
             return_to_input()

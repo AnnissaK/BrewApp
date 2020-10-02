@@ -9,3 +9,10 @@ class Drink():
         self.drink = drink
         self.type = type
         self.cost = cost
+    
+    def cost_function(self):
+        if self.type =='Alcoholic':
+            self.cost == "6.50"
+        else:
+            self.cost == "2.50"
+        
