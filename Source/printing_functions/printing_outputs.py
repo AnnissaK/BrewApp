@@ -70,3 +70,4 @@ def favourites_prompts():
     if input_drinks not in print_drinks():
         print(' add a drink to the list by selecting 5')
     save_csv_items(fave_dictionary,input_name,input_drinks)
+

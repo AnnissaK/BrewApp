@@ -5,14 +5,14 @@ class Person():
 
 
 class Drink():
-    def __init__(self,drink,type,cost):
+    def __init__(self,drink,type,cost=''):
         self.drink = drink
         self.type = type
         self.cost = cost
-    
-    def cost_function(self):
-        if self.type =='Alcoholic':
-            self.cost == "6.50"
+        if self.cost =='' and self.type =='Non_Alcoholic':
+            self.cost = '2.50'
         else:
-            self.cost == "2.50"
-        
+            self.cost ='6.50'
+
+
+   

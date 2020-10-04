@@ -1,23 +1,22 @@
 #have to go back to file and put curser on next line or throws error
+import csv
 import sys
+from csv import DictReader, reader, writer
+import pymysql
 from prettytable import PrettyTable
-from Source.Classes.drink_and_people_class import Person,Drink
+from Source.Classes.add_class_data import (add_faves_class,load_into_round_class, load_people)
+from Source.Classes.drink_and_people_class import Drink, Person
 from Source.Classes.favourites_class import Favourites
+from Source.Classes.handle_classes import (round_handle_drinks,round_handle_user_input)
 from Source.Classes.round_class import Round
-from Source.printing_functions.printing_outputs import print_drinks,print_people,get_age_of_person,get_type_of_drink,get_cost_of_drinks,print_previous_orders,favourites_menu
-from Source.data_bases.pulling_data_app import get_data_base
 from Source.CSV_data_storage.csv_load_data import load_into_list
-from Source.CSV_data_storage.save_csv import save_csv_items,save_round
-from Source.Classes.add_class_data import add_faves_class,load_into_round_class,load_people
+from Source.CSV_data_storage.save_csv import save_csv_items, save_round
+from Source.data_bases.pulling_data_app import get_data_base
 from Source.handle_inputs.preference_handle import age_restriction_for_preferences
 from Source.people_list.people_to_append import people
 from Source.printing_functions.print_table_items import print_table
-from Source.Classes.handle_classes import round_handle_drinks,round_handle_user_input
-import pymysql
-import csv
-from csv import DictReader
-from csv import writer
-from csv import reader
+from Source.printing_functions.printing_outputs import (favourites_menu,  get_age_of_person,get_cost_of_drinks,get_type_of_drink,print_drinks,print_people,print_previous_orders)
+from Source.data_bases.load_into_drinks import drinks                                                   
 
 APP_NAME = 'Brew App'
 MENU = f'''Welcome to {APP_NAME} v0.1!
@@ -42,16 +41,17 @@ file_drink_list = 'Source/CSV_data_storage/drinks.csv'
 def start():
     load_people(load_into_list(file_people_list,'name'),load_into_list(file_people_list,'age'))
     #load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
-    global drinks
-    drinks=(get_data_base('Drinks',Drink))
+    # global drinks
+    # drinks=(get_data_base('Drinks',Drink))
 
 def connection_f():
     connection = pymysql.connect(
-    host="localhost",
-    port=33066,
-    user="root",
-    passwd="password",
-    database="BrewApp")
+        host="localhost",
+        port=33066,
+        user="root",
+        passwd="password",
+        database="BrewApp"
+    )
     return connection  
 
 
@@ -91,65 +91,30 @@ def add_drinks():
         user_input_drinks = input(str('add the drink you want followed by a space with Non_Alcoholic or Alcoholic:\n'))
     except(TypeError,ValueError) as e:
         print(f'{e}')
-    handle_user_drinks()
+    handle_user_drinks(user_input_drinks)
 
- #append to data_list   
-
-#on exit
-def handle_user_drinks():
-    user_drink = user_input_drinks.split()[0]
-    user_type_drink =user_input_drinks.split()[1]
-    add_drink_object1 = Drink(user_drink,user_type_drink)
-    drinks.append(add_drink_object1)
-    cursor = connection_f().cursor()
-	args = ("v","p","j")
-	cursor.execute("INSERT INTO Drinks (Drink,Drink_type,`Cost / £`) VALUES ({%s},{%s},{%s})",args)
-	connection_f().commit()
-	cursor.close()
-	connection_f().close()
-    cursor = connection_f().cursor()
-    #for drink_name in drinks:
-    args =('k','k','k')
-    cursor.execute("INSERT INTO Drinks (Drink,Drink_type,`Cost / £`) VALUES (%s,%s,%s)",args)
-        # WHERE '{drink_name.drink}' NOT IN Drink")
-    connection_f().commit()
-    cursor.close()
-    connection_f().close()
+def handle_user_drinks(user_input_drinks):
+    user_drink_name = user_input_drinks.split()[0]
+    user_type_drink = user_input_drinks.split()[1]
+    drink_add_object = Drink(user_drink_name,user_type_drink)
+    drinks.append(drink_add_object)
+    if drink_add_object in drinks:
+        connection = pymysql.connect(
+            host="localhost",
+            port=33066,
+            user="root",
+            passwd="password",
+            database="BrewApp"
+        )
+        cursor = connection.cursor()
+        for i in drinks:
+            if i == drinks[-1]:
+                cursor.execute(f"INSERT INTO Drinks(Drink,Drink_type,`Cost / £`) VALUES ('{i.drink}','{i.type}','{i.cost}')")
+                connection.commit()
+        cursor.close()
+        connection.close()
             
-        
-        # cursor = connection_f().cursor()
-        # for i in drinks:
-        #     cursor.execute(f"INSERT INTO Drinks (Drink,Drink_type,`Cost / £` ) VALUES ('{i.drink}','{i.type}','{i.cost}') \
-        #     ON DUPLICATE KEY UPDATE Drink ='{i.drink}',Drink_type='{i.type}',`Cost / £`='{i.cost}'")
-        #     connection_f().commit()
-        # cursor.close()
-        # connection_f().close()
     
-    
-
-
-# def update_data_base(table,class_name,**kwargs):
-#     connection_f
-#     cursor = connection_f.cursor()
-#     for i in get_data_base('Drinks',Drink):
-#         for arg in kwargs:
-#             arguments = (class_name.kwargs)
-#             cursor.execute(f'INSERT INTO {table} ({args},{args},SET VALUES{arg}={arguments} ON DUPLICATE KEY UPDATE {arg}={arguments}')
-#     connection_f.commit()
-#     cursor.close()
-#     connection_f.close()
-
-# update_data_base('Drinks',Drink,A=drink,B=type,C=cost)
-
-
-        #args =(get_data_base(Drinks,'Drinks').drink,get_data_base(Drinks,'Drinks').type,'4.00')
-        #cursor.execute(f'''INSERT INTO {table} ({column1},{column2},{column3}) VALUES ("{%s},{%s},{%s}") ON DUPLICATE KEY UPDATE {column1},{column2},{column3}="{%s},{%s},{%s}"''',args+args)
-      
-    #if user_drink not in drinks:
-        #save_csv_items(file_drink_list,user_drink,user_type_drink)
-        #load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
-    # else:
-    #     print('drink already on database')
 
 def get_name_of_person(name,list_data):
     try:
@@ -202,11 +167,7 @@ def round_class_dictionary():
                 save_round(owner_name,order_person,name_of_drink)
 
 
-    # favourites = classes.Favourites(input_name)
-    # favourites.add_to_favourites(name,drink)
-    # favourites.print_favourites()
-    # favourites_dict[input_name]=input_drinks
-    # print(favourites_dict)
+
 
 def output(answer):
     while True:
