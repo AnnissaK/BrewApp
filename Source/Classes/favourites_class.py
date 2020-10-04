@@ -1,4 +1,4 @@
-from Source.printing_functions.printing_outputs import print_table
+#from Source.printing_functions.printing_outputs import print_table
 class Favourites():                              
     def __init__(self,name):
         self.name = name

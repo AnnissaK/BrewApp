@@ -8,8 +8,8 @@ def main():
 		database="BrewApp"
 	)
 	cursor = connection.cursor()
-	args = ("coffee", "soft_drink")
-	cursor.execute("INSERT INTO Drinks (Drink,Drink_type) VALUES ( %s, %s)", args)
+	args = ("k", "k","k")
+	cursor.execute("INSERT INTO Drinks (Drink,Drink_type,`Cost / £`) VALUES ( %s, %s,%s)", args)
 	connection.commit()
 	cursor.close()
 	connection.close()

@@ -1,4 +1,4 @@
-from Source.Core.drink_and_people_class import Drink
+from Source.Classes.drink_and_people_class import Drink
 import pymysql
 
 def connection_f():
@@ -7,7 +7,8 @@ def connection_f():
     port=33066,
     user="root",
     passwd="password",
-    database="BrewApp")
+    database="BrewApp"
+	)
     return connection
 
 # Drinks_title = 0

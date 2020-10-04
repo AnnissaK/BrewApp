@@ -3,9 +3,9 @@ from unittest import mock
 from unittest.mock import Mock
 from unittest.mock import patch
 from Source.main_part.main_code import round_handle_user_input,load_into_round_class
-from Source.Core.round_class import Round
-from Source.Core.favourites_class import Favourites
-from Source.Core.drink_and_people_class import Person,Drink
+from Source.Classes.round_class import Round
+from Source.Classes.favourites_class import Favourites
+from Source.Classes.drink_and_people_class import Person,Drink
 from Source.printing_functions.printing_outputs import print_table
 from Source.main_part.main_code import print_people,load_people,load_into_list
 from Source.main_part.main_code import print_previous_orders,add_faves_class
@@ -37,7 +37,11 @@ class Test_methods(unittest.TestCase):
         drinks_mock_test.name = 'Amy'
         drinks_mock_test.age = '24'
         drinks_mock_test.cost = '1.50'
-        
+        D1 = Drink('Amy','24','1.50')
+        Actual1 = D1.name
+        Actual2 = D1.age
+        Actual3 = D1.cost
+        self.AssertEqual(Actual1,drinks_m)
 
         
    

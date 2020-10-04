@@ -1,9 +1,9 @@
 #have to go back to file and put curser on next line or throws error
 import sys
 from prettytable import PrettyTable
-from Source.Core.drink_and_people_class import Person,Drink
-from Source.Core.favourites_class import Favourites
-from Source.Core.round_class import Round
+from Source.Classes.drink_and_people_class import Person,Drink
+from Source.Classes.favourites_class import Favourites
+from Source.Classes.round_class import Round
 from Source.printing_functions.printing_outputs import print_table
 import csv
 from csv import DictReader
@@ -23,10 +23,10 @@ Please, select an option by entering a number:
 [8] View favourites menu
 [9] Choose favourites
 '''
-file_people_list = 'person.csv'
-file_drink_list = 'drinks.csv'
-fave_dictionary = 'favourites_dictionary.csv'
-round_file = 'round.csv'
+file_people_list = 'Source/CSV_data_storage/person.csv'
+file_drink_list = 'Source/CSV_data_storage/drinks.csv'
+fave_dictionary = 'Source/CSV_data_storage/favourites_dictionary.csv'
+round_file = 'Source/CSV_data_storage/round.csv'
 people = []
 drinks=[]
 #fave_menu = {}
@@ -50,14 +50,6 @@ def return_to_input():
     except ValueError:
         print('An integer please\n')
 
-# def load_into_list(filename,*header):
-#     data_list =[]
-#     with open(filename,'r') as csvfile:
-#         csv_dict_reader = DictReader(csvfile)
-#         for row in csv_dict_reader:
-#             for i in header:
-#                 data_list.append(row[i])
-#         return data_list
 
 def load_into_list(filename,header):
     data_list =[]
