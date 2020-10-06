@@ -17,5 +17,5 @@ def round_handle_drinks():
     for i, (x,s) in enumerate(zip(print_drinks(),get_cost_of_drinks())):
         t.add_row([i,x,s])
     print(t)
-    input_number = input('Select the number corresponding to the drink you want from the list,if your name is not on the list select a number outside the range given \n')
+    input_number = input('Select the number corresponding to the drink you want, if you want your favourite drink select a number out of the range \n')
     return input_number

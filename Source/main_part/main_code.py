@@ -1,4 +1,5 @@
 #have to go back to file and put curser on next line or throws error
+#generic function
 import csv
 import sys
 from csv import DictReader, reader, writer
@@ -11,12 +12,14 @@ from Source.Classes.handle_classes import (round_handle_drinks,round_handle_user
 from Source.Classes.round_class import Round
 from Source.CSV_data_storage.csv_load_data import load_into_list
 from Source.CSV_data_storage.save_csv import save_csv_items, save_round
-from Source.data_bases.pulling_data_app import get_data_base
 from Source.handle_inputs.preference_handle import age_restriction_for_preferences
 from Source.people_list.people_to_append import people
 from Source.printing_functions.print_table_items import print_table
-from Source.printing_functions.printing_outputs import (favourites_menu,  get_age_of_person,get_cost_of_drinks,get_type_of_drink,print_drinks,print_people,print_previous_orders)
+from Source.printing_functions.printing_outputs import (favourites_menu,get_age_of_person,get_cost_of_drinks,get_type_of_drink,print_drinks,print_people,print_previous_orders)
 from Source.data_bases.load_into_drinks import drinks                                                   
+from Source.data_bases.pulling_data_app import connection_f
+from Source.data_bases.round_list import round_variables
+from Source.data_bases.saving_databases import handle_user_people,handle_user_drinks,insert_round_data
 
 APP_NAME = 'Brew App'
 MENU = f'''Welcome to {APP_NAME} v0.1!
@@ -37,24 +40,6 @@ file_drink_list = 'Source/CSV_data_storage/drinks.csv'
 #fave_dictionary='Source/CSV_data_storage/favourites_dictionary.csv'
 #drinks=[]
 #fave_menu = {}
-
-def start():
-    load_people(load_into_list(file_people_list,'name'),load_into_list(file_people_list,'age'))
-    #load_drinks(load_into_list(file_drink_list,'Drinks'),load_into_list(file_drink_list,'Drink_type'),load_into_list(file_drink_list,'cost'))
-    # global drinks
-    # drinks=(get_data_base('Drinks',Drink))
-
-def connection_f():
-    connection = pymysql.connect(
-        host="localhost",
-        port=33066,
-        user="root",
-        passwd="password",
-        database="BrewApp"
-    )
-    return connection  
-
-
 
 def menu_option():
     print(MENU)
@@ -77,14 +62,10 @@ def add_name():
         user_input = input(str('add your name and age to the database separated by a space in the respective order:\n'))
     except (TypeError,ValueError) as e:
         print(f'{e}')
-    name_user = user_input.split()[0]
-    age_user = user_input.split()[1]
-    if name_user not in print_people():
-        save_csv_items(file_people_list,name_user,age_user)
-        load_people(load_into_list(file_people_list,'name'),load_into_list(file_people_list,'age'))
+    handle_user_people(user_input)
     
-    else:
-        print('name already on the database')                        
+    
+                      
         
 def add_drinks():
     try:
@@ -92,27 +73,6 @@ def add_drinks():
     except(TypeError,ValueError) as e:
         print(f'{e}')
     handle_user_drinks(user_input_drinks)
-
-def handle_user_drinks(user_input_drinks):
-    user_drink_name = user_input_drinks.split()[0]
-    user_type_drink = user_input_drinks.split()[1]
-    drink_add_object = Drink(user_drink_name,user_type_drink)
-    drinks.append(drink_add_object)
-    if drink_add_object in drinks:
-        connection = pymysql.connect(
-            host="localhost",
-            port=33066,
-            user="root",
-            passwd="password",
-            database="BrewApp"
-        )
-        cursor = connection.cursor()
-        for i in drinks:
-            if i == drinks[-1]:
-                cursor.execute(f"INSERT INTO Drinks(Drink,Drink_type,`Cost / £`) VALUES ('{i.drink}','{i.type}','{i.cost}')")
-                connection.commit()
-        cursor.close()
-        connection.close()
             
     
 
@@ -128,8 +88,8 @@ def get_name_of_person(name,list_data):
 
 def get_preferred_drinks():
     print(print_people())
-    input_owner = input('choose a name referring to the owner buying the round')
-    input_name = input('Please enter the name of person you are buying for')
+    input_owner = input('choose a name referring to the owner buying the round \n')
+    input_name = input('Please enter the name of person you are buying for \n')
     if input_name not in (print_people()):
         print('your name is not on the system please add your name by returning to the main menu')
     preference_round(input_owner,input_name)
@@ -164,8 +124,7 @@ def round_class_dictionary():
                     print('it is illegal to buy to an alcoholic drink even if the person buying your round is over 18')
             else:
                 print('there is no age restrictions for your drink')
-                save_round(owner_name,order_person,name_of_drink)
-
+                insert_round_data(owner_name,order_person,name_of_drink)
 
 
 
@@ -200,5 +159,5 @@ def output(answer):
 
 
 if __name__ == "__main__":
-    start()
+    # start()
     menu_option()

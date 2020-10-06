@@ -6,6 +6,8 @@ from Source.CSV_data_storage.save_csv import save_csv_items
 from Source.data_bases.load_into_drinks import drinks
 from Source.Classes.add_class_data import add_faves_class
 from Source.printing_functions.print_table_items import print_table
+from Source.Classes.round_class import Round
+from Source.data_bases.round_list import round_variables
 round_file = 'Source/CSV_data_storage/round.csv'
 fave_dictionary = 'Source/CSV_data_storage/favourites_dictionary.csv'
 
@@ -33,8 +35,8 @@ def get_cost_of_drinks():
 
 
 def print_previous_orders():
-    orders_dict=[obj.orders for obj in load_into_round_class(load_into_list(round_file,'owner'),load_into_list(round_file,'name'),load_into_list(round_file,'drink'))]
-    owners_list = [obj.owner for obj in load_into_round_class(load_into_list(round_file,'owner'),load_into_list(round_file,'name'),load_into_list(round_file,'drink'))]
+    orders_dict=[obj.orders for obj in round_variables]
+    owners_list = [obj.owner for obj in round_variables]
     items =[]
     cost_list=[]
     for d in orders_dict:
