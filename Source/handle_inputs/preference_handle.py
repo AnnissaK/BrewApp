@@ -11,7 +11,7 @@ def age_restriction_for_preferences(age_of_person_name,age_of_owner,input_name,i
             print('you are not old enough to order your favourite drink')
         else: 
             print(f'you can buy your favourite drink ')
-            save_round(input_owner,input_name,drink)
+            insert_round_data(input_owner,input_name,drink)
     elif input_type =='n':
         print('There are no age restrictions on soft drinks')
-        save_round(input_owner,input_name,drink)
+        insert_round_data(input_owner,input_name,drink)

@@ -9,10 +9,9 @@ class Drink():
         self.drink = drink
         self.type = type
         self.cost = cost
-        if self.cost =='' and self.type =='Non_Alcoholic':
+        if self.cost == '' and self.type =='Non_Alcoholic':
             self.cost = '2.50'
-        else:
+        elif self.cost == '' and self.type =='Alcoholic':
             self.cost ='6.50'
-
-
-   
+        elif self.cost =='':
+            self.cost ='7.50'

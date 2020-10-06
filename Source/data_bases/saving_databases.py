@@ -3,6 +3,9 @@ from Source.people_list.people_to_append import people
 from Source.data_bases.load_into_drinks import drinks
 from Source.data_bases.round_list import round_variables
 from Source.Classes.round_class import Round
+from Source.Classes.favourites_class import Favourites
+from Source.data_bases.preference_list import favourites_list
+
 def handle_user_people(user_input):
     name_user = user_input.split()[0]
     age_user = user_input.split()[1]
@@ -60,14 +63,38 @@ def insert_round_data(owner_name,order_person,name_of_drink):
     r1 = Round(owner_name)
     r1.add_order(order_person,name_of_drink)
     round_variables.append(r1)
+    # obj_orders =[obj.orders for obj in round_variables]
+    # owners_list = [obj.owner for obj in round_variables]
     for i in round_variables:
         if i ==round_variables[-1]:
-            obj_orders =[obj.orders for obj in round_variables]
-            owners_list = [obj.owner for obj in round_variables]
-            for i in owners_list:
-                for d in obj_orders:
-                    for key in d:
-                        cursor.execute(f"INSERT INTO Rounds(owner,name,drink) VALUES('{i}','{key}','{d[key]}')")
-                        connection.commit()
+            owner_name = i.owner
+            order_dicts = i.orders
+            for key,value in order_dicts.items():               
+                cursor.execute(f"INSERT INTO Rounds(owner,name,drink) VALUES('{owner_name}','{key}','{value}')")
+                connection.commit()
     cursor.close()
     connection.close()
+
+
+def insert_into_favourites(input_name,input_drinks):
+    connection = pymysql.connect(
+        host="localhost",
+        port=33066,
+        user="root",
+        passwd="password",
+        database="BrewApp"
+    )
+    cursor= connection.cursor()
+    F1 = Favourites(input_name)
+    F1.add_to_favourites(input_name,input_drinks)
+    favourites_list.append(F1)
+    #obj_orders =[obj.fave_dict for obj in favourites_list]
+    for i in favourites_list:
+        if i == favourites_list[-1]:
+            fave_dictionary = i.fave_dict
+            for key,value in fave_dictionary.items():
+                cursor.execute(f"INSERT INTO Favourites(name,favourites) VALUES('{key}','{value}')")
+                connection.commit()
+    cursor.close()
+    connection.close()
+

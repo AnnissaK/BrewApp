@@ -15,11 +15,12 @@ from Source.CSV_data_storage.save_csv import save_csv_items, save_round
 from Source.handle_inputs.preference_handle import age_restriction_for_preferences
 from Source.people_list.people_to_append import people
 from Source.printing_functions.print_table_items import print_table
-from Source.printing_functions.printing_outputs import (favourites_menu,get_age_of_person,get_cost_of_drinks,get_type_of_drink,print_drinks,print_people,print_previous_orders)
+from Source.printing_functions.printing_outputs import (favourites_menu,get_age_of_person,get_cost_of_drinks,get_type_of_drink,print_drinks,print_people,print_previous_orders,favourites_prompts)
 from Source.data_bases.load_into_drinks import drinks                                                   
 from Source.data_bases.pulling_data_app import connection_f
 from Source.data_bases.round_list import round_variables
 from Source.data_bases.saving_databases import handle_user_people,handle_user_drinks,insert_round_data
+from Source.data_bases.preference_list import favourites_list
 
 APP_NAME = 'Brew App'
 MENU = f'''Welcome to {APP_NAME} v0.1!
@@ -69,7 +70,8 @@ def add_name():
         
 def add_drinks():
     try:
-        user_input_drinks = input(str('add the drink you want followed by a space with Non_Alcoholic or Alcoholic:\n'))
+        user_input_drinks = input(str('''add the drink you want followed by a space with Non_Alcoholic or Alcoholic:
+        PLEASE BE AWARE IF YOU DO NOT FOLLOW THE CORRECT FORMAT FOR DRINK TYPE YOU WILL BE CHARGED UNFAIRLY'''))
     except(TypeError,ValueError) as e:
         print(f'{e}')
     handle_user_drinks(user_input_drinks)
@@ -96,7 +98,7 @@ def get_preferred_drinks():
         
 
 def preference_round(input_owner,input_name):
-    favourite=[obj.fave_dict for obj in (add_faves_class(load_into_list(fave_dictionary,'name'),load_into_list(fave_dictionary,'favourites')))]
+    favourite=[obj.fave_dict for obj in favourites_list]
     for d in favourite:
         for key in d:
             if key == input_name:

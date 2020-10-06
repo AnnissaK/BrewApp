@@ -1,5 +1,6 @@
 from Source.Classes.drink_and_people_class import Drink,Person
 from Source.Classes.round_class import Round
+from Source.Classes.favourites_class import Favourites
 import pymysql
 
 def connection_f():
@@ -64,8 +65,24 @@ def get_data_round(table,Y):
     connection_f().close()
     return data_list
 
+def get_data_preferences(table,Y):
+    data_list =[]
+    cursor = connection_f().cursor()
+    cursor.execute(f"SELECT * FROM {table}")
+    while True:
+        data_info = cursor.fetchone()
+        if not data_info:
+            break
+        f1 = (Y(data_info[0]))
+        f1.add_to_favourites(data_info[0],data_info[1])
+        data_list.append(f1)
+    connection_f().commit()
+    cursor.close()
+    connection_f().close()
+    return data_list
 
 
+    
 
 
 
