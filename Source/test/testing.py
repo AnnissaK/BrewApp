@@ -9,6 +9,7 @@ from Source.Classes.drink_and_people_class import Person,Drink
 from Source.printing_functions.printing_outputs import print_table
 from Source.main_part.main_code import print_people,load_people,load_into_list
 from Source.main_part.main_code import print_previous_orders,add_faves_class
+from Source.main_part.main_code import get_drinks_options
 
 #test method in class
 #try except block
@@ -42,8 +43,9 @@ class Test_methods(unittest.TestCase):
         Actual2 = D1.age
         Actual3 = D1.cost
         self.AssertEqual(Actual1,drinks_m)
+    
+   
 
-        
    
    
    

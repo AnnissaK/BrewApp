@@ -41,7 +41,7 @@ def get_data_base_people(table,Y):
         data_info = cursor.fetchone()
         if not data_info:
             break
-        data_list.append(Y(data_info[0],data_info[1]))
+        data_list.append(Y(data_info[1],data_info[2],data_info[0]))
         #insert cost into class-call the function in drinks class-for adding new drinks
     connection_f().commit()
     cursor.close()
@@ -56,7 +56,7 @@ def get_data_round(table,Y):
         data_info = cursor.fetchone()
         if not data_info:
             break
-        r1 =(Y(data_info[0]))
+        r1 =(Y(data_info[0],data_info[3]))
         r1.add_order(data_info[1],data_info[2])
         data_list.append(r1)
         #insert cost into class-call the function in drinks class-for adding new drinks

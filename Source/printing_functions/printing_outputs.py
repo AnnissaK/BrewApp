@@ -11,10 +11,14 @@ from Source.data_bases.round_list import round_variables
 from Source.Classes.favourites_class import Favourites
 from Source.data_bases.preference_list import favourites_list
 from Source.data_bases.saving_databases import insert_into_favourites
+from prettytable import PrettyTable
 round_file = 'Source/CSV_data_storage/round.csv'
 fave_dictionary = 'Source/CSV_data_storage/favourites_dictionary.csv'
 
-      
+def print_ID():
+    people_ID = [person.ID for person in people]
+    return people_ID      
+
 def print_people():
     people_names = [person.name for person in people]
     return people_names
@@ -44,18 +48,23 @@ def print_previous_orders():
     cost_list=[]
     for d in orders_dict:
         for key in d:
-            cost_list.append(obj.cost for obj in drinks if obj.drink==d[key])
+            cost_obj = [obj.cost for obj in drinks if obj.drink == d[key]]
+            cost_list.extend(cost_obj)
             items.append((f'{key}\'s ordered {d[key]}'))
     for i,x,s in zip(owners_list,items,cost_list):
         print(f'{i.upper()}\'s ROUND : {x} and the cost of the drink was £{s}')
         
 def favourites_menu():
     favourite=[obj.fave_dict for obj in favourites_list]
-    items =[]
+    #items =[]
+    t = PrettyTable()
+    t.title='Favourites'
+    t.field_names = ['Name','Drink']
     for d in favourite:
         for key in d:
-            items.append((f'{key}\'s favourite drink is {d[key]}'))
-    print_table('Favourites',items)
+            #items.append((f'{key}\'s favourite drink is {d[key]}'))
+            t.add_row([key,d[key]])
+    print(t)
 
 #need save csv
 def favourites_prompts():

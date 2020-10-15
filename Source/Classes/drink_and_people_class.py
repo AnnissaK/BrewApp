@@ -1,7 +1,9 @@
 class Person():
-     def __init__(self,name,age):
-         self.name = name
-         self.age = age
+     def __init__(self,name,age,ID): #ID 
+         #self.ID =ID
+        self.name = name
+        self.age = age
+        self.ID = ID
 
 
 class Drink():

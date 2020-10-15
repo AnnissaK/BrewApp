@@ -1,13 +1,14 @@
-#from Source.printing_functions.printing_outputs import print_table
+import calendar
+import datetime
 class Round():
-    def __init__(self,owner):
+    def __init__(self,owner,weekday):
         self.owner = owner
         self.orders = {}
+        self.weekday = weekday
     
     def add_order(self,name,drink):
         self.orders[name]=drink
-
-
+      
     def return_items(self):
         items = []
         for name,drink in self.orders.items():
